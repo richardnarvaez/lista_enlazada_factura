@@ -1,4 +1,5 @@
 import os
+import uuid
 
 
 def clear():
@@ -14,3 +15,7 @@ def pause():
 
 def emptyData():
     print("\n\tNo existen FACTURAS en este momento.....!!!!\n")
+
+
+def getRandomID():
+    return uuid.uuid4().hex[:4]

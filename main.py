@@ -2,42 +2,25 @@
 '''
     Autor: Richard Vinueza
     Curso: Estructura de Datos - ESPOCH
-    Ejercicio: FACTURA (PYTHON 3)
+    Ejercicio: Funcionamiento basico de FACTURAS con LISTAS enlazadas (PYTHON 3)
     IDE: PyCharm
+    Version: v0.0.2
+    Ejecutar: python main.py
 '''
 
-
-import List as ls
-import Utils as u
-import uuid
+# Importaciones
+# --------------------
+from List import List
+import Utils as utils
 from datetime import date
 
-
-class Factura:
-    def __init__(self, _code=None, _names=None, _lastNames=None, _date=None, _phone=None, _total=None, _list=None):
-        self.code = _code  # campo codigo
-        self.names = _names  # campo que almacena el nombre
-        self.date = _date  # campo que almacena la direccion
-        self.phone = _phone   # campo que almacena el telefono
-        self.total = _total  # campo que almacena el telefono
-        self.list = _list  # campo que almacena el telefono
-
-    def getData(self):
-        print("Data")
-
-    def set(self):
-        print("setDAta")
+# Modelos
+from models.Invoice import Invoice
+from models.Product import Product
+# --------------------
 
 
-class Item:
-    def __init__(self, _name=None, _price=None):
-        self.count = 0
-        self.name = _name
-        self.price = _price
-        self.total = 0.0
-
-
-# -------------------- MENU PRINCIPAL --------------------
+# -------------------- MENU PRINCIPAL
 def menu():
     print("\n----------------------------------------")
     print("            [    FACTURAS    ]            ")
@@ -50,7 +33,7 @@ def menu():
     return input("\n Ingrese opción : ")
 
 
-# ----------------- MENU ACTUALIZAR UN DATO --------------
+# -------------------- MENU ACTUALIZAR UN DATO
 def menu_actualizar():
     print("\n\t\t[    ESPECIFIQUE CAMPO A ACTUALIZAR    ]\n  ")
     print("\t\t----------------------------\n\n              ")
@@ -62,39 +45,40 @@ def menu_actualizar():
     return input("\n Ingrese opcion : ")
 
 
-# ----------------- REGISTRAR ITEM -----------------------
+# -------------------- REGISTRAR ITEM
 def registrar_items():
-    listItems = ls.List()
+    listProducts = List()  # Lista que llevara todos los Productos
     total = 0
     op = ""
     while op != "n":
         try:
-            print("Ingresar Item")
-            item = Item()
-            item.count = input("Cuantos Quieres?: ")
-            item.name = "Item 1"
-            item.price = 12.80
-            item.total = int(item.count) * item.price
-            listItems.add_at_front(item)
+            print("Ingresar NUEVO Item")
+            item = Product()
+            item.name = input("Como se llama el PRODUCTO: ")
+            item.price = float(input("Cual es el precio (Formato: 9.85): "))
+            item.count = int(input("Cuantos -> " + item.name + " quieres?: "))
+            item.total = item.count * item.price
+            listProducts.add_at_front(item)
             total += item.total
             op = input("Desea ingresar otro producto? (y/n)").lower()
         except ValueError:
             print("\t-------------------------------------")
             print("\tOcurrio un error al ingresar el ITEM!")
-            print("\t-------------------------------------")
+            print("\tEL ULTIMO PRODUCTO NO FUE AGREGADO!")
+            print("\t-------------------------------------\n\n")
             op = 'y'
 
-    return listItems, total
+    return listProducts, total
 
 
-# -------------------- REGISTRAR FACTURA -----------------
+# -------------------- REGISTRAR FACTURA
 def registrar_factura(lista):
-    register = Factura()
+    register = Invoice()
     print("\n\n\t[  REGISTRO  ]")
     print("\t--------------------")
     print("\n\tDATOS DE FACTURA ")
 
-    register.code = uuid.uuid4().hex[:4]
+    register.code = utils.getRandomID()
     register.date = date.today().strftime("%b-%d-%Y")
     print("\tCODIGO: ", register.code)
     print("\tFECHA: ", register.date)
@@ -112,33 +96,20 @@ def registrar_factura(lista):
     #     print("Quieres abandonar esta Factura? (y/n)")
 
 
-# -------------------- MOSTRAR FACTURA -------------------
+# -------------------- MOSTRAR FACTURA
 def mostrar_facturas(list):
     node = list.getHead()
     while node != None:
-        print("\t*************************************************")
-        print("\t******************* FACTURA *********************")
-        print("\t*************************************************")
-        print("\tFactura: ", node.data.code)
-        print("\tFecha: ", node.data.date)
-        print("\tNombres: ", node.data.names)
-        print("\t******************** ITEMS **********************")
-        nodeItem = node.data.list.getHead()
-        print("\t*************************************************")
-        while nodeItem != None:
-            print("\t", nodeItem.data.count, "    ",  nodeItem.data.name, "    ", nodeItem.data.price, "  ", nodeItem.data.total)
-            nodeItem = nodeItem.next
-        print("\t*************************************************")
-        print("\t TOTAL: ", node.data.total)
-        print("\t*************************************************")
-        print("\t-------------------------------------------------\n\n")
+        node.data.printInvoice()
         node = node.next
 
 
-# -------------------- MOSTRAR NODOS -------------------
+# -------------------- MOSTRAR NODOS
 def mostrar_nodos(list):
     list.print_list()
-# ------------------------ ELIMINAR FACTURA --------------
+
+
+# -------------------- ELIMINAR FACTURA
 def eliminar_factura(list):
     cod = input("Ingresa el codigo de la FACTURA que deseas BORRAR: ")
     list.delete_node(cod)
@@ -147,47 +118,49 @@ def eliminar_factura(list):
     list.print_list()
 
 
-# -------------------- ACTUALIZAR FACTURA ----------------
+# -------------------- ACTUALIZAR FACTURA
 def actualizar_factura(list):
     print("Proximamente")
 
 
-# /*-------------------- FUNCION PRINCIPAL ---------------*/
+# -------------------- FUNCION PRINCIPAL
 def main():
     out = False
-    list = ls.List()
+    list = List()
 
     while not out:
 
-        u.clear()
         option = menu()
-        u.clear()
+        utils.clear()
+
         if option == "1":
             registrar_factura(list)
         elif option == "2":
             if list.is_empty():
-                u.emptyData()
+                utils.emptyData()
             else:
                 eliminar_factura(list)
         elif option == "3":
             if list.is_empty():
-                u.emptyData()
+                utils.emptyData()
             else:
                 # actualizar_factura(list)
                 mostrar_nodos(list)
         elif option == "4":
             if list.is_empty():
-                u.emptyData()
+                utils.emptyData()
             else:
                 mostrar_facturas(list)
         elif option <= "0" or option >= "6":
             print("\nINGRESE UNA OPCION VALIDA...\n")
 
         if option != "5":
-            u.pause()
+            utils.pause()
         else:
             print("Saliendo...")
             out = True
+
+        utils.clear()
 
 
 if __name__ == '__main__':
