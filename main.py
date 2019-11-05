@@ -4,7 +4,7 @@
     Curso: Estructura de Datos - ESPOCH
     Ejercicio: Funcionamiento basico de FACTURAS con LISTAS enlazadas (PYTHON 3)
     IDE: PyCharm
-    Version: v0.0.2
+    Version: v0.0.1
     Ejecutar: python main.py
 '''
 
@@ -33,20 +33,8 @@ def menu():
     return input("\n Ingrese opción : ")
 
 
-# -------------------- MENU ACTUALIZAR UN DATO
-def menu_actualizar():
-    print("\n\t\t[    ESPECIFIQUE CAMPO A ACTUALIZAR    ]\n  ")
-    print("\t\t----------------------------\n\n              ")
-    print(" 1. NOMBRES                                       ")
-    print(" 2. APELLIDOS                                     ")
-    print(" 3. DIRECCION                                     ")
-    print(" 4. TELEFONO                                      ")
-    print(" 5. SALIR                                         ")
-    return input("\n Ingrese opcion : ")
-
-
 # -------------------- REGISTRAR ITEM
-def registrar_items():
+def registrar_products():
     listProducts = List()  # Lista que llevara todos los Productos
     total = 0
     op = ""
@@ -56,7 +44,7 @@ def registrar_items():
             item = Product()
             item.name = input("Como se llama el PRODUCTO: ")
             item.price = float(input("Cual es el precio (Formato: 9.85): "))
-            item.count = int(input("Cuantos -> " + item.name + " quieres?: "))
+            item.count = int(input("Cuant@s -> " + item.name + " quieres?: "))
             item.total = item.count * item.price
             listProducts.add_at_front(item)
             total += item.total
@@ -73,27 +61,24 @@ def registrar_items():
 
 # -------------------- REGISTRAR FACTURA
 def registrar_factura(lista):
-    register = Invoice()
+    item_invoice = Invoice()
     print("\n\n\t[  REGISTRO  ]")
     print("\t--------------------")
     print("\n\tDATOS DE FACTURA ")
 
-    register.code = utils.getRandomID()
-    register.date = date.today().strftime("%b-%d-%Y")
-    print("\tCODIGO: ", register.code)
-    print("\tFECHA: ", register.date)
-    register.name = input("\tNOMBRES:")
-    register.phone = input("\tTELEFONO:")
-    itm = registrar_items()
-    register.list = itm[0]
-    register.total = itm[1]
-    lista.add_at_front(register)
-    print("Su FACTURA FUE GENERADA")
-    print("Imprimir datos")
-    lista.print_list()
-    # else:
-    #     print("Parece que no hay productos")
-    #     print("Quieres abandonar esta Factura? (y/n)")
+    item_invoice.code = utils.getRandomID()
+    item_invoice.date = date.today().strftime("%b-%d-%Y")
+
+    print("\tCODIGO: ", item_invoice.code)
+    print("\tFECHA: ", item_invoice.date)
+    item_invoice.name = input("\tNOMBRES:")
+    item_invoice.phone = input("\tTELEFONO:")
+
+    # Registramos los Productos, como es otra lista tenemos una funcion separada.
+    iproduct = registrar_products()
+    item_invoice.list = iproduct[0]  # Devuelve la LISTA de Productos
+    item_invoice.total = iproduct[1]  # Devuelve el valor total de la compra
+    lista.add_at_front(item_invoice)
 
 
 # -------------------- MOSTRAR FACTURA
@@ -126,7 +111,7 @@ def actualizar_factura(list):
 # -------------------- FUNCION PRINCIPAL
 def main():
     out = False
-    list = List()
+    list_facturas = List()
 
     while not out:
 
@@ -134,23 +119,23 @@ def main():
         utils.clear()
 
         if option == "1":
-            registrar_factura(list)
+            registrar_factura(list_facturas)
         elif option == "2":
-            if list.is_empty():
+            if list_facturas.is_empty():
                 utils.emptyData()
             else:
-                eliminar_factura(list)
+                eliminar_factura(list_facturas)
         elif option == "3":
-            if list.is_empty():
+            if list_facturas.is_empty():
                 utils.emptyData()
             else:
                 # actualizar_factura(list)
-                mostrar_nodos(list)
+                mostrar_nodos(list_facturas)
         elif option == "4":
-            if list.is_empty():
+            if list_facturas.is_empty():
                 utils.emptyData()
             else:
-                mostrar_facturas(list)
+                mostrar_facturas(list_facturas)
         elif option <= "0" or option >= "6":
             print("\nINGRESE UNA OPCION VALIDA...\n")
 
