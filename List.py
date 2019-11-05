@@ -1,5 +1,4 @@
 
-
 # Creamos la clase NODO
 class node:
 
