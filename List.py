@@ -10,7 +10,7 @@ class node:
 # Creamos la clase List
 class List:
     def __init__(self):
-        self.head = None
+        self.head = None  # Para enpezar el HEAD es nulo, por ende la sista esta VACIA
 
     # Método para agregar elementos al inicio
     def add_at_front(self, data):
@@ -37,6 +37,7 @@ class List:
         while curr and curr.data.code != key:
             prev = curr
             curr = curr.next
+
         if prev is None:
             self.head = curr.next
         elif curr:
