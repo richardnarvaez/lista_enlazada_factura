@@ -71,7 +71,7 @@ def registrar_factura(lista):
 
     print("\tCODIGO: ", item_invoice.code)
     print("\tFECHA: ", item_invoice.date)
-    item_invoice.name = input("\tNOMBRES:")
+    item_invoice.names = input("\tNOMBRES:")
     item_invoice.phone = input("\tTELEFONO:")
 
     # Registramos los Productos, como es otra lista tenemos una funcion separada.
@@ -98,9 +98,7 @@ def mostrar_nodos(list):
 def eliminar_factura(list):
     cod = input("Ingresa el codigo de la FACTURA que deseas BORRAR: ")
     list.delete_node(cod)
-    print("\n\n\n\tFACTURA ELIMINDA")
-    print("------------------------")
-    list.print_list()
+    return list
 
 
 # -------------------- ACTUALIZAR FACTURA
@@ -118,26 +116,29 @@ def main():
         option = menu()
         utils.clear()
 
-        if option == "1":
+        if option <= "0" or option >= "6":
+            print("\nINGRESE UNA OPCION VALIDA...\n")
+
+        elif option == "1":
             registrar_factura(list_facturas)
+
         elif option == "2":
             if list_facturas.is_empty():
                 utils.emptyData()
             else:
-                eliminar_factura(list_facturas)
+                eliminar_factura(list_facturas).print_list()
+
         elif option == "3":
             if list_facturas.is_empty():
                 utils.emptyData()
             else:
-                # actualizar_factura(list)
                 mostrar_nodos(list_facturas)
+
         elif option == "4":
             if list_facturas.is_empty():
                 utils.emptyData()
             else:
                 mostrar_facturas(list_facturas)
-        elif option <= "0" or option >= "6":
-            print("\nINGRESE UNA OPCION VALIDA...\n")
 
         if option != "5":
             utils.pause()
