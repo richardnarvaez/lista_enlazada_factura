@@ -23,12 +23,26 @@ class List:
     # Método para agregar elementos al final
     def add_at_end(self, data):
         if not self.head:
-            self.head = node(data=data)
+            self.head = node(_data=data)
             return
-        curr = self.headadd_at
+        curr = self.head
         while curr.next:
             curr = curr.next
-        curr.next = node(data=data)
+        curr.next = node(_data=data)
+
+    def add_in_position(self, position, data):
+        new_node = node(_data=data)
+        current = self.head
+        if position == 0:
+            new_node.next = current
+            self.head = new_node
+        else:
+            k = 1
+            while current.next is not None and k < position:
+                current = current.next
+                k += 1
+            new_node.next = current.next
+            current.next = new_node
 
     # Método para eleminar nodos
     def delete_node(self, key):

@@ -4,7 +4,7 @@
     Curso: Estructura de Datos - ESPOCH
     Ejercicio: Funcionamiento basico de FACTURAS con LISTAS enlazadas (PYTHON 3)
     IDE: PyCharm
-    Version: v0.0.1
+    Version: v0.0.2
     Ejecutar: python main.py
 '''
 
@@ -105,6 +105,27 @@ def eliminar_factura(list):
 def actualizar_factura(list):
     print("Proximamente")
 
+def insertar_en_posicion(list):
+  pos = input("Ingresar la posicion: ")
+  item_invoice = Invoice()
+  print("\n\n\t[  REGISTRO  ]")
+  print("\t--------------------")
+  print("\n\tDATOS DE FACTURA ")
+
+  item_invoice.code = utils.getRandomID()
+  item_invoice.date = date.today().strftime("%b-%d-%Y")
+
+  print("\tCODIGO: ", item_invoice.code)
+  print("\tFECHA: ", item_invoice.date)
+  item_invoice.names = input("\tNOMBRES:")
+  item_invoice.phone = input("\tTELEFONO:")
+
+  # Registramos los Productos, como es otra lista tenemos una funcion separada.
+  iproduct = registrar_products()
+  item_invoice.list = iproduct[0]  # Devuelve la LISTA de Productos
+  item_invoice.total = iproduct[1]  # Devuelve el valor total de la compra
+  list.add_in_position(int(pos), item_invoice)
+
 
 # -------------------- FUNCION PRINCIPAL
 def main():
@@ -116,7 +137,7 @@ def main():
         option = menu()
         utils.clear()
 
-        if option <= "0" or option >= "6":
+        if option <= "0" or option >= "7":
             print("\nINGRESE UNA OPCION VALIDA...\n")
 
         elif option == "1":
@@ -140,7 +161,13 @@ def main():
             else:
                 mostrar_facturas(list_facturas)
 
-        if option != "5":
+        elif option == "5":
+            if list_facturas.is_empty():
+                print("Solo se puede insertar en la primera posicion por que no hay mas items")
+            else:
+                insertar_en_posicion(list_facturas)
+
+        if option != "6":
             utils.pause()
         else:
             print("Saliendo...")
